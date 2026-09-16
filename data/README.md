@@ -1,3 +1,28 @@
+Name - Marta Andrade e Sousa
+Number - 20260664
+
+Run: 20260916_124128
+Model: decision_tree  params={'max_depth': 5}
+Test size: 0.2  random_state: 42
+============================================================
+
+Train accuracy: 0.680
+Test accuracy:  0.668
+Gap (train - test): +0.012
+
+Run: 20260916_120921
+Model: logistic_regression  params={'max_iter': 1000}
+Test size: 0.2  random_state: 42
+============================================================
+
+Train accuracy: 0.679
+Test accuracy:  0.677
+Gap (train - test): +0.002
+
+
+Conclusions:
+The logistic regression achieved a slightly higher test accuracy (0.677 vs. 0.668)
+However, the logistic regression model demonstrates better generalization and stability, as indicated by its smaller gap between training and test accuracy (+0.002 compared to +0.012 for the decision tree)
 # Dataset -- COMPAS Recidivism (ProPublica)
 
 ## The problem
@@ -52,3 +77,4 @@ error.
 | `two_year_recid` | binary | **target** -- was this person rearrested within two years? | `0` = no, `1` = yes |
 
 Source: derived from [propublica/compas-analysis](https://github.com/propublica/compas-analysis) (the data behind the "Machine Bias" investigation). Personally-identifying columns (name, date of birth, case numbers, charge descriptions) were removed.
+
