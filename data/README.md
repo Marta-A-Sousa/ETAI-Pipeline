@@ -23,6 +23,31 @@ Gap (train - test): +0.002
 Conclusions:
 The logistic regression achieved a slightly higher test accuracy (0.677 vs. 0.668)
 However, the logistic regression model demonstrates better generalization and stability, as indicated by its smaller gap between training and test accuracy (+0.002 compared to +0.012 for the decision tree)
+
+
+# Week 3 - Cleaning pipeline
+Model: decision_tree  params={'max_depth': 5}
+
+Train accuracy: 0.683
+Test accuracy:  0.680
+Gap (train - test): +0.003
+----------------------------------------------------------
+
+Model: logistic_regression  params={'max_iter': 1000}
+
+Train accuracy: 0.669
+Test accuracy:  0.669
+Gap (train - test): -0.000
+----------------------------------------------------------
+
+Conclusions:
+After applying the cleaning step:
+    The decision tree improved its test accuracy (from 0.668 to 0.68) and its gap dropped (from +0.012 to +0.003);
+    The logistic regression decreased slightly (from 0.677 to 0.669), with a gap of approximately zero.
+As a result, the decision tree now performs slightly better on the test set.
+
+Overall, the main benefit of data cleaning is a more reliable score (the models are now trained on data where each category and value means what it is supposed to mean).
+
 # Dataset -- COMPAS Recidivism (ProPublica)
 
 ## The problem
