@@ -48,6 +48,42 @@ As a result, the decision tree now performs slightly better on the test set.
 
 Overall, the main benefit of data cleaning is a more reliable score (the models are now trained on data where each category and value means what it is supposed to mean).
 
+# Week 4 - Preprocessing
+
+Model: logistic_regression  params={'max_iter': 1000}
+
+Train accuracy: 0.678
+Test accuracy:  0.674
+Gap (train - test): +0.004
+-----------------------------------------------------------
+
+Model: dummy  params={}
+
+Train accuracy: 0.549
+Test accuracy:  0.550
+Gap (train - test): -0.000
+-----------------------------------------------------------
+
+Model: decision_tree  params={'max_depth': 5}
+
+Train accuracy: 0.685
+Test accuracy:  0.678
+Gap (train - test): +0.006
+-----------------------------------------------------------
+
+Model: random_forest  params={'n_estimators': 300}
+
+Train accuracy: 0.722
+Test accuracy:  0.644
+Gap (train - test): +0.078
+-----------------------------------------------------------
+
+Conclusions
+
+The results stayed almost the same, with the logistic regression going from 0.669 to 0.674 and the decision tree from 0.68 to 0.678. Both are above the dummy (0.55), which only predicts the most common class, so the models are learning. The random forest did worse (0.644) and had a bigger gap between train and validation (0.078), which suggests it is overfitting.
+This week, 20% of the data was set aside as a test set that is not used at all (it will only be used at the end of the project to evaluate the final model). The models were trained on 75% of the remaining data and evaluated on the other 25% (validation), so they learned from fewer people than last weekand were tested on different ones. So, the main improvement this week is a more correct pipeline (no information leaking into the evaluation).
+
+
 # Dataset -- COMPAS Recidivism (ProPublica)
 
 ## The problem

@@ -7,21 +7,24 @@ data:
   sensitive_attr: "race"          # excluded from model features, used only to audit fairness
   drop_columns: ["id", "decile_score", "score_text"]  # identifiers / COMPAS's own score, not our model's inputs
 
-split:
-  test_size: 0.2
+test_set:
+  size: 0.2
   random_state: 42
 
 model:
-  type: "logistic_regression"   # or "decision_tree"
-  params: 
-    max_iter: 1000
+  type: "random_forest"   # or "decision_tree"
+  params:
+    n_estimators: 300
+    
+
+
   
 
 output:
   results_dir: "results"   # each run's full report is saved here as a timestamped .txt file
 
 diagnostics:
-  placeholder_token: ["-", "?", "n/a", "N/A", "na", "NA", ""]
+  placeholder_tokens: ["-", "?", "n/a", "N/A", "na", "NA", ""]
   numeric_text_columns: ["priors_count", "prior_offenses"]
   validity_rules: 
     age: {min: 18, max: 100}
@@ -51,3 +54,14 @@ diagnostics:
       high: "High"
   id_column: "id"
   redundant_columns: ["prior_offenses", "age_in_months", "juvenile_total"]
+
+preprocessing:
+  encoder: "target"     # onehot | ordinal | count | target
+  scaler: "robust"      # none | standard | minmax | robust
+  numeric_features: ["age", "juv_fel_count", "juv_misd_count", "juv_other_count", "priors_count"]
+  categorical_features: ["sex", "age_cat", "c_charge_degree"]
+  mnar_indicator_sources: ["priors_count", "c_charge_degree"]
+  random_state: 42
+  imputation:
+    numeric_strategy: "median"
+    categorical_strategy: "most_frequent"
