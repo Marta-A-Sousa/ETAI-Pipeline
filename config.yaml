@@ -11,10 +11,18 @@ test_set:
   size: 0.2
   random_state: 42
 
+cv:
+  n_splits: 5
+  shuffle: true
+  random_state: 42
+  scoring: "accuracy"
+  n_jobs: 1
+
 model:
   type: "random_forest"   # or "decision_tree"
   params:
-    n_estimators: 300
+    n_estimators: 100
+    random_state: 42
     
 
 
@@ -24,7 +32,7 @@ output:
   results_dir: "results"   # each run's full report is saved here as a timestamped .txt file
 
 diagnostics:
-  placeholder_tokens: ["-", "?", "n/a", "N/A", "na", "NA", ""]
+  placeholder_tokens: ["-", "?", "n/a", "N/A", "na", "NA", "", "nan"]
   numeric_text_columns: ["priors_count", "prior_offenses"]
   validity_rules: 
     age: {min: 18, max: 100}
@@ -65,3 +73,23 @@ preprocessing:
   imputation:
     numeric_strategy: "median"
     categorical_strategy: "most_frequent"
+
+tuning:
+  enabled: true
+  n_trials: 30
+  n_splits: 5           # folds that score each candidate
+  random_state: 42      # seeds the sampler and those folds
+  # Keys are Pipeline parameter names. Types: int / float (low, high, log) or categorical (choices).
+  search_spaces:
+    decision_tree:
+      model__max_depth: {type: int, low: 1, high: 20}
+      model__min_samples_leaf: {type: int, low: 1, high: 200, log: true}
+      model__criterion: {type: categorical, choices: ["gini", "entropy"]}
+    logistic_regression:
+      model__C: {type: float, low: 0.0001, high: 100, log: true}
+    random_forest:
+      model__n_estimators: {type: int, low: 50, high: 300}
+      model__max_depth: {type: categorical, choices: [3, 5, 8, 12, null]}
+      model__min_samples_leaf: {type: int, low: 1, high: 100, log: true}
+      model__max_features: {type: categorical, choices: ["sqrt", "log2", 0.5, 1.0]}
+

@@ -83,6 +83,44 @@ Conclusions
 The results stayed almost the same, with the logistic regression going from 0.669 to 0.674 and the decision tree from 0.68 to 0.678. Both are above the dummy (0.55), which only predicts the most common class, so the models are learning. The random forest did worse (0.644) and had a bigger gap between train and validation (0.078), which suggests it is overfitting.
 This week, 20% of the data was set aside as a test set that is not used at all (it will only be used at the end of the project to evaluate the final model). The models were trained on 75% of the remaining data and evaluated on the other 25% (validation), so they learned from fewer people than last weekand were tested on different ones. So, the main improvement this week is a more correct pipeline (no information leaking into the evaluation).
 
+# Week 5 - Cross validation & hyperparameters 
+
+Model: decision_tree  params={'random_state': 42}
+
+
+Hyperparameters from config.yaml: {'random_state': 42}
+Validation  mean = 0.610   std = 0.018
+
+Nested cross-validation (the tuning procedure, estimated honestly):
+Validation  mean = 0.672   std = 0.017
+
+Best mean CV score:   0.679  (the maximum over all trials -- optimistic)
+optimism = +0.002   -> report the honest one
+Best hyperparameters: {'model__max_depth': 6, 'model__min_samples_leaf': 101, 'model__criterion': 'gini'}
+-----------------------------------------------------------------------------------------------------------------------
+Model: logistic_regression  params={'max_iter': 1000}
+
+Hyperparameters from config.yaml: {'max_iter': 1000}
+Validation  mean = 0.672   std = 0.013
+
+Nested cross-validation (the tuning procedure, estimated honestly):
+Validation  mean = 0.673   std = 0.016
+
+Best mean CV score:   0.678  (the maximum over all trials -- optimistic)
+optimism = +0.002   -> report the honest one
+Best hyperparameters: {'model__C': 0.07154217398141553}
+------------------------------------------------------------------------------------------------------------------------
+Model: random_forest  params={'n_estimators': 100, 'random_state': 42}
+
+Hyperparameters from config.yaml: {'n_estimators': 100, 'random_state': 42}
+Validation  mean = 0.647   std = 0.016
+
+Nested cross-validation (the tuning procedure, estimated honestly):
+Validation  mean = 0.679   std = 0.013
+
+Best mean CV score:   0.683  (the maximum over all trials -- optimistic)
+optimism = +0.003   -> report the honest one
+Best hyperparameters: {'model__n_estimators': 237, 'model__max_depth': 8, 'model__min_samples_leaf': 61, 'model__max_features': 'log2'}
 
 # Dataset -- COMPAS Recidivism (ProPublica)
 
