@@ -109,7 +109,7 @@ Validation  mean = 0.673   std = 0.016
 Best mean CV score:   0.678  (the maximum over all trials -- optimistic)
 optimism = +0.002   -> report the honest one
 Best hyperparameters: {'model__C': 0.07154217398141553}
-------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 Model: random_forest  params={'n_estimators': 100, 'random_state': 42}
 
 Hyperparameters from config.yaml: {'n_estimators': 100, 'random_state': 42}
@@ -121,6 +121,20 @@ Validation  mean = 0.679   std = 0.013
 Best mean CV score:   0.683  (the maximum over all trials -- optimistic)
 optimism = +0.003   -> report the honest one
 Best hyperparameters: {'model__n_estimators': 237, 'model__max_depth': 8, 'model__min_samples_leaf': 61, 'model__max_features': 'log2'}
+-------------------------------------------------------------------
+
+# Week 6 - Ensembles
+
+| Model | Default: CV mean ± std (gap) | Tuned: nested CV mean ± std (gap) | Tuning score (best trial) | Chosen hyperparameters |
+|---|---|---|---|---|
+| Logistic regression | 0.672 ± 0.013 (+0.003) | — | — | — |
+| Decision tree | 0.610 ± 0.018 (+0.085) | 0.672 ± 0.017 (+0.013) | 0.679 | max_depth=6, min_samples_leaf=101, criterion=gini |
+| Random forest | 0.650 ± 0.019 (+0.082) | 0.681 ± 0.015 (+0.009) | 0.683 | max_depth=22, min_samples_leaf=42, max_features=0.5 |
+| Oblique random forest | 0.647 ± 0.011 (+0.114) | 0.679 ± 0.013 (+0.013) | 0.683 | tree max_depth=6, min_samples_leaf=3, n_components=5 |
+| AdaBoost | 0.676 ± 0.012 (+0.006) | 0.682 ± 0.017 (+0.004) | 0.684 | max_depth=4, n_estimators=220, learning_rate=0.025 |
+
+Adaboost had the highest nested CV score (0.682), followed by the random forest (0.681) and the oblique random forest (0.679) The three ensembles are only 0.001-0.003 apart, and about 0.01 above logistic regression and the tuned tree. These differences are smaller than the fold-to-fold std (~0.015), so no model is clearly better than the others. Without tuning, the forests overfit (gap +0.08 for RF and +0.11 for ORF), and tuning brought the gap down to about +0.01. AdaBoost already had a small gap with the default settings (+0.006). 
+The chosen hyperparameters match how each model works. The random forest chose deep trees (max_depth=22), because averaging many trees reduces variance, so each tree can be deep. AdaBoost chose shallow trees (max_depth=4) and a small learning rate (0.025), because boosting needs weak learners and a small learning rate makes each round change the model less. The number to report is the nested CV score (0.682 for AdaBoost), not the best trial score (0.684), because the best trial is the maximum over 30 trials and is optimistic.
 
 # Dataset -- COMPAS Recidivism (ProPublica)
 

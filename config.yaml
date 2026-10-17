@@ -18,12 +18,23 @@ cv:
   scoring: "accuracy"
   n_jobs: 1
 
-model:
-  type: "random_forest"   # or "decision_tree"
-  params:
-    n_estimators: 100
-    random_state: 42
     
+model:
+  type: "adaboost"     # dummy | logistic_regression | decision_tree | random_forest | oblique_random_forest | adaboost
+  params:
+    max_depth: 1              # weak learners are stumps
+    n_estimators: 200 
+    learning_rate: 1.0      
+            # more trees never overfit, they only cost time
+           # <= number of features
+    random_state: 42
+                  # -1 = all CPU cores
+    # Other models' params, to swap in:
+  # decision_tree:          {random_state: 42}
+  # logistic_regression:    {max_iter: 2000}
+  # oblique_random_forest:  {n_estimators: 200, n_components: 10, random_state: 42, n_jobs: -1}
+  # adaboost:               {max_depth: 1, n_estimators: 200, learning_rate: 1.0, random_state: 42}
+  # random_forest:          {n_estimators: 200, random_state: 42, n_jobs: -1}
 
 
   
@@ -77,9 +88,10 @@ preprocessing:
 tuning:
   enabled: true
   n_trials: 30
-  n_splits: 5           # folds that score each candidate
-  random_state: 42      # seeds the sampler and those folds
+  n_splits: 5                                       # folds that score each candidate
+  random_state: 42                                  # seeds the sampler and those folds
   # Keys are Pipeline parameter names. Types: int / float (low, high, log) or categorical (choices).
+  # Ensembles take minutes per run: use a small n_trials while testing.
   search_spaces:
     decision_tree:
       model__max_depth: {type: int, low: 1, high: 20}
@@ -88,8 +100,17 @@ tuning:
     logistic_regression:
       model__C: {type: float, low: 0.0001, high: 100, log: true}
     random_forest:
-      model__n_estimators: {type: int, low: 50, high: 300}
-      model__max_depth: {type: categorical, choices: [3, 5, 8, 12, null]}
-      model__min_samples_leaf: {type: int, low: 1, high: 100, log: true}
-      model__max_features: {type: categorical, choices: ["sqrt", "log2", 0.5, 1.0]}
+      model__max_depth: {type: int, low: 2, high: 30}
+      model__min_samples_leaf: {type: int, low: 1, high: 200, log: true}
+      model__max_features: {type: categorical, choices: ["sqrt", 0.5, 1.0]}
+    oblique_random_forest:
+      model__estimator__tree__max_depth: {type: int, low: 2, high: 30}
+      model__estimator__tree__min_samples_leaf: {type: int, low: 1, high: 200, log: true}
+      model__estimator__project__n_components: {type: int, low: 3, high: 10}   # <= number of features
+    adaboost:
+      model__estimator__max_depth: {type: int, low: 1, high: 8}
+      model__n_estimators: {type: int, low: 25, high: 400, log: true}
+      model__learning_rate: {type: float, low: 0.01, high: 1.0, log: true}
+
+
 
