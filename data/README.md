@@ -134,7 +134,29 @@ Best hyperparameters: {'model__n_estimators': 237, 'model__max_depth': 8, 'model
 | AdaBoost | 0.676 ± 0.012 (+0.006) | 0.682 ± 0.017 (+0.004) | 0.684 | max_depth=4, n_estimators=220, learning_rate=0.025 |
 
 Adaboost had the highest nested CV score (0.682), followed by the random forest (0.681) and the oblique random forest (0.679) The three ensembles are only 0.001-0.003 apart, and about 0.01 above logistic regression and the tuned tree. These differences are smaller than the fold-to-fold std (~0.015), so no model is clearly better than the others. Without tuning, the forests overfit (gap +0.08 for RF and +0.11 for ORF), and tuning brought the gap down to about +0.01. AdaBoost already had a small gap with the default settings (+0.006). 
-The chosen hyperparameters match how each model works. The random forest chose deep trees (max_depth=22), because averaging many trees reduces variance, so each tree can be deep. AdaBoost chose shallow trees (max_depth=4) and a small learning rate (0.025), because boosting needs weak learners and a small learning rate makes each round change the model less. The number to report is the nested CV score (0.682 for AdaBoost), not the best trial score (0.684), because the best trial is the maximum over 30 trials and is optimistic.
+The chosen hyperparameters match how each model works. The random forest chose deep trees (max_depth=22), because averaging many trees reduces variance, so each tree can be deep
+. AdaBoost chose shallow trees (max_depth=4) and a small learning rate (0.025), because boosting needs weak learners and a small learning rate makes each round change the model less. The number to report is the nested CV score (0.682 for AdaBoost), not the best trial score (0.684), because the best trial is the maximum over 30 trials and is optimistic.
+-------------------------------------------------------------------------------------------------------------------------
+
+# Week 7 - boosting & metrics
+
+## Scoreboard (selection metric: ROC-AUC, 5-fold CV, nested CV for tuned models)
+| Model | Untuned | Tuned (nested) mean ± std | Floor | Tuned hyperparameters |
+|---|---|---|---|---|
+| Gradient boosting | 0.727 | 0.727 ± 0.014 | 0.500 | n_estimators=426, learning_rate=0.012, max_depth=3, min_samples_leaf=2, subsample=0.77 |
+| HistGradientBoosting | 0.717 | 0.727 ± 0.016 | 0.500 | max_iter=82, learning_rate=0.11, max_leaf_nodes=4, min_samples_leaf=130, l2_regularization=0.0007 |
+| AdaBoost | 0.723 | 0.727 ± 0.015 | 0.500 | max_depth=4, n_estimators=55, learning_rate=0.17 |
+| Oblique random forest | 0.685 | 0.726 ± 0.015 | 0.500 | tree max_depth=12, min_samples_leaf=87, n_components=8 |
+| Random forest | 0.683 | 0.726 ± 0.013 | 0.500 | max_depth=9, min_samples_leaf=42, max_features=0.5 |
+| Logistic regression | 0.719 | — | 0.500 | — |
+| Decision tree | 0.604 | 0.717 ± 0.017 | 0.500 | max_depth=16, min_samples_leaf=88, criterion=gini |
+| Naive Bayes | 0.685 | 0.705 ± 0.012 | 0.500 | var_smoothing=0.091 |
+| Dummy | 0.500 | — | 0.500 | — |
+
+All models are well above the floor of 0.5, so they all learn something from the data. The five ensembles end up almost the same after tuning (0.726–0.727), and the differences between them are much smaller than the std, so none of them is really better. Tuning helped the trees and forests a lot (the decision tree went from 0.604 to 0.717) because without limits they overfit, but it changed almost nothing for gradient boosting, because its default settings already use small trees. Naive Bayes is the weakest model, probably because it assumes the features are independent, and here they are not (for example age and age_cat).
+
+## Selection metric
+I used ROC-AUC as the selection metric. It measures how well the model ranks people from low to high risk, which is what a risk score like COMPAS is used for. It also doesn't depend on the 0.5 threshold, so choosing the threshold can be a separate decision later.
 
 # Dataset -- COMPAS Recidivism (ProPublica)
 
